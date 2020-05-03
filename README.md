@@ -23,4 +23,5 @@ A proof of concept of a react web ui for a C++ app.
 - Organize C++ code
 - Serve generated UI with pistache
 - Websocket
+- cmake install: ui folder ? clean up required ?
 
