@@ -1,4 +1,6 @@
-# C++ Coding Dojo Template
+# Web UI proof of concept
+
+A proof of concept of a react web ui for a C++ app.
 
 ## Getting Started
 
@@ -14,4 +16,11 @@
 ## Deployment
 
 ...
+
+## TODO
+
+- Find `npm` in cmake
+- Organize C++ code
+- Serve generated UI with pistache
+- Websocket
 
