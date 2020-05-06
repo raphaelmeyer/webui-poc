@@ -1,5 +1,7 @@
+find_package(Npm REQUIRED)
+
 add_custom_target(frontend ALL
-  COMMAND npm run build
+  COMMAND ${NPM_EXECUTABLE} run build
   WORKING_DIRECTORY
     ${CMAKE_CURRENT_SOURCE_DIR}
   BYPRODUCTS
