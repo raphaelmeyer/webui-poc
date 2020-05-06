@@ -22,4 +22,4 @@ if [ ! -d "${script_dir}/frontend/node_modules" ] ; then
     npm install
 fi
 
-cmake --build "${build_dir}" --target install
+cmake --build "${build_dir}" --target all

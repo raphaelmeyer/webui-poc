@@ -1,0 +1,11 @@
+#!/bin/bash
+
+script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+build_dir="${WORKSPACE:-${script_dir}/_build}"
+install_dir="${WORKSPACE:-${script_dir}/_install}"
+
+${script_dir}/build
+
+rm -r ${install_dir}
+cmake --build "${build_dir}" --target install
