@@ -5,10 +5,11 @@
 class Machine
 {
 public:
-    nlohmann::json get_state() const;
+    nlohmann::json state() const;
+    nlohmann::json temperature() const;
+
     nlohmann::json start();
     nlohmann::json stop();
-    nlohmann::json temperature() const;
 
 private:
     enum class State

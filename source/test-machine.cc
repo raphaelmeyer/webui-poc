@@ -9,14 +9,14 @@ namespace
 TEST_CASE("Machine is initially off")
 {
     Machine testee;
-    CHECK(testee.get_state() == R"({"state": "off"})"_json);
+    CHECK(testee.state() == R"({"state": "off"})"_json);
 }
 
 TEST_CASE("When starting then the machine is running")
 {
     Machine testee;
     CHECK(testee.start() == R"({"start": "ok"})"_json);
-    CHECK(testee.get_state() == R"({"state": "running"})"_json);
+    CHECK(testee.state() == R"({"state": "running"})"_json);
 }
 
 TEST_CASE("Starting a running machine keeps running")
@@ -25,7 +25,7 @@ TEST_CASE("Starting a running machine keeps running")
     testee.start();
 
     CHECK(testee.start() == R"({"start": "already running"})"_json);
-    CHECK(testee.get_state() == R"({"state": "running"})"_json);
+    CHECK(testee.state() == R"({"state": "running"})"_json);
 }
 
 TEST_CASE("When stopping then a running machine is idle")
@@ -34,14 +34,14 @@ TEST_CASE("When stopping then a running machine is idle")
     testee.start();
 
     CHECK(testee.stop() == R"({"stop": "ok"})"_json);
-    CHECK(testee.get_state() == R"({"state": "idle"})"_json);
+    CHECK(testee.state() == R"({"state": "idle"})"_json);
 }
 
 TEST_CASE("Stopping an off machine is still off")
 {
     Machine testee;
     CHECK(testee.stop() == R"({"stop": "not running"})"_json);
-    CHECK(testee.get_state() == R"({"state": "off"})"_json);
+    CHECK(testee.state() == R"({"state": "off"})"_json);
 }
 
 TEST_CASE("Stopping an idle machine is still idle")
@@ -51,7 +51,7 @@ TEST_CASE("Stopping an idle machine is still idle")
     testee.stop();
 
     CHECK(testee.stop() == R"({"stop": "not running"})"_json);
-    CHECK(testee.get_state() == R"({"state": "idle"})"_json);
+    CHECK(testee.state() == R"({"state": "idle"})"_json);
 }
 
 TEST_CASE("Temperature of an off machine is about 21C")

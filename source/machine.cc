@@ -2,7 +2,7 @@
 
 #include <random>
 
-nlohmann::json Machine::get_state() const
+nlohmann::json Machine::state() const
 {
     nlohmann::json state;
 
@@ -20,6 +20,33 @@ nlohmann::json Machine::get_state() const
     }
 
     return state;
+}
+
+nlohmann::json Machine::temperature() const
+{
+    std::random_device rd{};
+    std::mt19937 gen{rd()};
+    std::uniform_real_distribution<> dis(-1.0, 1.0);
+    auto const variation = dis(gen);
+
+    nlohmann::json result;
+
+    switch (_state)
+    {
+    case State::off:
+        result["temperature"] = 21.0 + variation;
+        break;
+
+    case State::idle:
+        result["temperature"] = 25.0 + variation;
+        break;
+
+    case State::running:
+        result["temperature"] = 42.0 + variation;
+        break;
+    }
+
+    return result;
 }
 
 nlohmann::json Machine::start()
@@ -49,33 +76,6 @@ nlohmann::json Machine::stop()
     else
     {
         result["stop"] = "not running";
-    }
-
-    return result;
-}
-
-nlohmann::json Machine::temperature() const
-{
-    std::random_device rd{};
-    std::mt19937 gen{rd()};
-    std::uniform_real_distribution<> dis(-1.0, 1.0);
-    auto const variation = dis(gen);
-
-    nlohmann::json result;
-
-    switch (_state)
-    {
-    case State::off:
-        result["temperature"] = 21.0 + variation;
-        break;
-
-    case State::idle:
-        result["temperature"] = 25.0 + variation;
-        break;
-
-    case State::running:
-        result["temperature"] = 42.0 + variation;
-        break;
     }
 
     return result;
