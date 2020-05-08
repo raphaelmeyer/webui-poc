@@ -12,4 +12,11 @@ TEST_CASE("Machine is initially off")
     CHECK(testee.get_state() == R"({"state": "off"})"_json);
 }
 
+TEST_CASE("When starting then the machine is running")
+{
+    Machine testee;
+    CHECK(testee.start() == R"({"start": "ok"})"_json);
+    CHECK(testee.get_state() == R"({"state": "running"})"_json);
+}
+
 } // namespace

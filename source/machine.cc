@@ -3,7 +3,26 @@
 nlohmann::json Machine::get_state() const
 {
     nlohmann::json state;
-    state["state"] = "off";
+
+    switch (_state)
+    {
+    case State::running:
+        state["state"] = "running";
+        break;
+    default:
+        state["state"] = "off";
+        break;
+    }
 
     return state;
+}
+
+nlohmann::json Machine::start()
+{
+    nlohmann::json result;
+    result["start"] = "ok";
+
+    _state = State::running;
+
+    return result;
 }
