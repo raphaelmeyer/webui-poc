@@ -19,4 +19,13 @@ TEST_CASE("When starting then the machine is running")
     CHECK(testee.get_state() == R"({"state": "running"})"_json);
 }
 
+TEST_CASE("Starting a running machine reports that it is already running")
+{
+    Machine testee;
+    testee.start();
+
+    CHECK(testee.start() == R"({"start": "already running"})"_json);
+    CHECK(testee.get_state() == R"({"state": "running"})"_json);
+}
+
 } // namespace

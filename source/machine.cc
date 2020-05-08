@@ -20,9 +20,15 @@ nlohmann::json Machine::get_state() const
 nlohmann::json Machine::start()
 {
     nlohmann::json result;
-    result["start"] = "ok";
-
-    _state = State::running;
+    if (_state == State::running)
+    {
+        result["start"] = "already running";
+    }
+    else
+    {
+        result["start"] = "ok";
+        _state = State::running;
+    }
 
     return result;
 }
