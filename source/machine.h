@@ -8,6 +8,7 @@ public:
     nlohmann::json get_state() const;
     nlohmann::json start();
     nlohmann::json stop();
+    nlohmann::json temperature() const;
 
 private:
     enum class State

@@ -54,4 +54,43 @@ TEST_CASE("Stopping an idle machine is still idle")
     CHECK(testee.get_state() == R"({"state": "idle"})"_json);
 }
 
+TEST_CASE("Temperature of an off machine is about 21C")
+{
+    Machine testee;
+
+    auto const reponse = testee.temperature();
+    REQUIRE(reponse.find("temperature") != reponse.end());
+
+    auto const t = reponse["temperature"].get<double>();
+    CHECK(20.0 <= t);
+    CHECK(t <= 22.0);
+}
+
+TEST_CASE("Temperature of an idle machine is about 25C")
+{
+    Machine testee;
+    testee.start();
+    testee.stop();
+
+    auto const reponse = testee.temperature();
+    REQUIRE(reponse.find("temperature") != reponse.end());
+
+    auto const t = reponse["temperature"].get<double>();
+    CHECK(24.0 <= t);
+    CHECK(t <= 26.0);
+}
+
+TEST_CASE("Temperature of a running machine is about 42C")
+{
+    Machine testee;
+    testee.start();
+
+    auto const reponse = testee.temperature();
+    REQUIRE(reponse.find("temperature") != reponse.end());
+
+    auto const t = reponse["temperature"].get<double>();
+    CHECK(41.0 <= t);
+    CHECK(t <= 43.0);
+}
+
 } // namespace
