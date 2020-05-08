@@ -1,3 +1,6 @@
+#include "machine.h"
+#include "machine_api.h"
+
 #include <pistache/endpoint.h>
 #include <pistache/router.h>
 
@@ -8,102 +11,6 @@
 #include <string>
 
 using namespace Pistache;
-
-class Machine
-{
-public:
-    Machine()
-        : _state{State::off}, _rd{}, _gen{_rd()}
-    {
-    }
-
-    void get_state(const Rest::Request &request, Http::ResponseWriter response)
-    {
-        nlohmann::json data{};
-
-        std::map<State, std::string> const names{
-            {State::off, "off"},
-            {State::idle, "idle"},
-            {State::running, "running"}};
-
-        auto const name = names.find(_state);
-        if (name != names.end())
-        {
-            response.headers().add<Http::Header::AccessControlAllowOrigin>("*"); // CORS
-
-            data["state"] = name->second;
-            response.send(Http::Code::Ok, data.dump());
-        }
-        else
-        {
-            response.send(Http::Code::Internal_Server_Error);
-        }
-    }
-
-    void start(const Rest::Request &request, Http::ResponseWriter response)
-    {
-        switch (_state)
-        {
-        case State::off:
-        case State::idle:
-            _state = State::running;
-            response.headers().add<Http::Header::AccessControlAllowOrigin>("*"); // CORS
-            response.send(Http::Code::Ok);
-            break;
-        default:
-            response.send(Http::Code::Not_Modified);
-            break;
-        }
-    }
-
-    void stop(const Rest::Request &request, Http::ResponseWriter response)
-    {
-        if (_state == State::running)
-        {
-            _state = State::idle;
-            response.headers().add<Http::Header::AccessControlAllowOrigin>("*"); // CORS
-            response.send(Http::Code::Ok);
-        }
-        response.send(Http::Code::Not_Modified);
-    }
-
-    void get_temperature(const Rest::Request &request, Http::ResponseWriter response)
-    {
-        std::uniform_real_distribution<> dis(-1.0, 1.0);
-        auto const variation = dis(_gen);
-        nlohmann::json data;
-
-        switch (_state)
-        {
-        case State::off:
-            data["temperature"] = 21.0 + variation;
-            break;
-
-        case State::idle:
-            data["temperature"] = 25.0 + variation;
-            break;
-
-        case State::running:
-            data["temperature"] = 42.0 + variation;
-            break;
-        }
-        response.headers().add<Http::Header::AccessControlAllowOrigin>("*"); // CORS
-        response.send(Http::Code::Ok, data.dump());
-    }
-
-private:
-    enum class State
-    {
-        off,
-        idle,
-        running
-    };
-
-    State _state;
-
-    std::random_device _rd;
-    std::mt19937 _gen;
-};
 
 int main()
 {
@@ -133,12 +40,12 @@ int main()
 
     http_endpoint.init(options);
 
-    Machine machine{};
+    auto const machine = std::make_shared<MachineApi>(std::make_shared<Machine>());
 
-    Rest::Routes::Get(router, "/machine/state", Rest::Routes::bind(&Machine::get_state, &machine));
-    Rest::Routes::Post(router, "/machine/start", Rest::Routes::bind(&Machine::start, &machine));
-    Rest::Routes::Post(router, "/machine/stop", Rest::Routes::bind(&Machine::stop, &machine));
-    Rest::Routes::Get(router, "/machine/temperature", Rest::Routes::bind(&Machine::get_temperature, &machine));
+    Rest::Routes::Get(router, "/machine/state", Rest::Routes::bind(&MachineApi::get_state, machine));
+    Rest::Routes::Post(router, "/machine/start", Rest::Routes::bind(&MachineApi::do_start, machine));
+    Rest::Routes::Post(router, "/machine/stop", Rest::Routes::bind(&MachineApi::do_stop, machine));
+    Rest::Routes::Get(router, "/machine/temperature", Rest::Routes::bind(&MachineApi::get_temperature, machine));
 
     http_endpoint.setHandler(router.handler());
     http_endpoint.serve();
