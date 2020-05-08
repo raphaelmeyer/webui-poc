@@ -39,9 +39,15 @@ nlohmann::json Machine::start()
 nlohmann::json Machine::stop()
 {
     nlohmann::json result;
-    result["stop"] = "ok";
-
-    _state = State::idle;
+    if (_state == State::running)
+    {
+        result["stop"] = "ok";
+        _state = State::idle;
+    }
+    else
+    {
+        result["stop"] = "not running";
+    }
 
     return result;
 }

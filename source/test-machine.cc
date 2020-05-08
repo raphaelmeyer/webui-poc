@@ -19,7 +19,7 @@ TEST_CASE("When starting then the machine is running")
     CHECK(testee.get_state() == R"({"state": "running"})"_json);
 }
 
-TEST_CASE("Starting a running machine reports that it is already running")
+TEST_CASE("Starting a running machine keeps running")
 {
     Machine testee;
     testee.start();
@@ -34,6 +34,23 @@ TEST_CASE("When stopping then a running machine is idle")
     testee.start();
 
     CHECK(testee.stop() == R"({"stop": "ok"})"_json);
+    CHECK(testee.get_state() == R"({"state": "idle"})"_json);
+}
+
+TEST_CASE("Stopping an off machine is still off")
+{
+    Machine testee;
+    CHECK(testee.stop() == R"({"stop": "not running"})"_json);
+    CHECK(testee.get_state() == R"({"state": "off"})"_json);
+}
+
+TEST_CASE("Stopping an idle machine is still idle")
+{
+    Machine testee;
+    testee.start();
+    testee.stop();
+
+    CHECK(testee.stop() == R"({"stop": "not running"})"_json);
     CHECK(testee.get_state() == R"({"state": "idle"})"_json);
 }
 
