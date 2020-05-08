@@ -12,18 +12,21 @@ add_library(settings INTERFACE)
 target_compile_features(settings INTERFACE cxx_std_17)
 target_compile_options(settings INTERFACE -pedantic -Wall -Werror)
 
-# Code
-add_library(code)
-target_sources(code PRIVATE source/code.cc)
-target_link_libraries(code PUBLIC settings)
+add_library(machine
+  source/machine.cc
+)
+target_link_libraries(machine
+  PUBLIC
+    settings
+    nlohmann_json::nlohmann_json
+)
 
-# Test
-add_executable(test)
-target_sources(test PRIVATE source/test-code.cc)
-target_link_libraries(test PRIVATE code doctest::doctest)
+add_executable(test
+  source/test-machine.cc
+)
+target_link_libraries(test PRIVATE machine doctest::doctest)
 add_custom_target(run-tests ALL test ARGS -fc)
 
-# App
 add_executable(webui)
 target_sources(webui PRIVATE webui/main.cc)
 target_link_libraries(webui PRIVATE settings pistache::pistache nlohmann_json::nlohmann_json)
