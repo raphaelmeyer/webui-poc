@@ -9,7 +9,10 @@ nlohmann::json Machine::get_state() const
     case State::running:
         state["state"] = "running";
         break;
-    default:
+    case State::idle:
+        state["state"] = "idle";
+        break;
+    case State::off:
         state["state"] = "off";
         break;
     }
@@ -29,6 +32,16 @@ nlohmann::json Machine::start()
         result["start"] = "ok";
         _state = State::running;
     }
+
+    return result;
+}
+
+nlohmann::json Machine::stop()
+{
+    nlohmann::json result;
+    result["stop"] = "ok";
+
+    _state = State::idle;
 
     return result;
 }

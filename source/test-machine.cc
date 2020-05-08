@@ -28,4 +28,13 @@ TEST_CASE("Starting a running machine reports that it is already running")
     CHECK(testee.get_state() == R"({"state": "running"})"_json);
 }
 
+TEST_CASE("When stopping then a running machine is idle")
+{
+    Machine testee;
+    testee.start();
+
+    CHECK(testee.stop() == R"({"stop": "ok"})"_json);
+    CHECK(testee.get_state() == R"({"state": "idle"})"_json);
+}
+
 } // namespace
