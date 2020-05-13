@@ -15,6 +15,7 @@ target_compile_options(settings INTERFACE -pedantic -Wall -Werror)
 add_library(machine
   source/machine.cc
   source/machine_api.cc
+  source/rest_server.cc
 )
 target_link_libraries(machine
   PUBLIC
