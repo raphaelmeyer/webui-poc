@@ -13,8 +13,10 @@ target_compile_features(settings INTERFACE cxx_std_17)
 target_compile_options(settings INTERFACE -pedantic -Wall -Werror)
 
 add_library(machine
-  source/machine.cc
+  source/file_handler.cc
+  source/frontend.cc
   source/machine_api.cc
+  source/machine.cc
   source/rest_server.cc
 )
 target_link_libraries(machine
@@ -28,7 +30,7 @@ target_include_directories(machine PUBLIC source)
 add_executable(test
   source/test-machine.cc
 )
-target_link_libraries(test PRIVATE machine doctest::doctest)
+target_link_libraries(test PRIVATE settings machine doctest::doctest)
 add_custom_target(run-tests ALL test ARGS -fc)
 
 add_executable(webui webui/main.cc)

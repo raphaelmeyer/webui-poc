@@ -17,10 +17,14 @@
         "editor.formatOnSave": true,
         "cmake.configureOnOpen": true,
         "cmake.buildDirectory": "${workspaceFolder}/_build",
+        "cmake.installPrefix": "${workspaceFolder}/_install",
         "cmake.preferredGenerators": [
             "Ninja"
         ],
         "C_Cpp.default.configurationProvider": "vector-of-bool.cmake-tools",
-        "C_Cpp.clang_format_style": "file"
+        "C_Cpp.clang_format_style": "file",
+        "files.associations": {
+            "filesystem": "cpp"
+        }
     }
 }

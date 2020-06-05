@@ -5,7 +5,9 @@ A proof of concept of a react web ui for a C++ app.
 ## Getting Started
 
     ./build
+    _build/webui frontend/build
 
+Then open `http://localhost:3003` in a browser.
 
 ## UI development
 
@@ -15,12 +17,9 @@ A proof of concept of a react web ui for a C++ app.
 
 ## Deployment
 
-...
+    ./install
+    cd _install && bin/webui
 
 ## TODO
 
-- Organize C++ code
-- Serve generated UI with pistache
 - Websocket
-- cmake install: ui folder ? clean up required ?
-

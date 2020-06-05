@@ -13,7 +13,9 @@ RestServer::RestServer(std::shared_ptr<MachineApi> api)
 
 void RestServer::start()
 {
-    auto const options = Http::Endpoint::options().threads(Threads);
+    auto const options = Http::Endpoint::options()
+                             .threads(Threads)
+                             .flags(Tcp::Options::ReuseAddr);
 
     _endpoint.init(options);
 
